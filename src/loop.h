@@ -21,9 +21,9 @@ public:
     ofxButton button;
     ofxFloatSlider volume;
     ofxFloatSlider pitch;
-
+    ofxFloatSlider position;
+    ofxFloatSlider trim;
   };
-
 
 
 

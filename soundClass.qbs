@@ -22,7 +22,6 @@ Project{
         of.addons: [
             'ofxGui',
             'ofxXmlSettings',
-            'ofxDatGui-master',
         ]
 
         // additional flags for the project. the of module sets some

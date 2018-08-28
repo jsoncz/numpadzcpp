@@ -25,7 +25,7 @@ void ofApp::loadPack(){
         sounds[i].setMultiPlay(true);
     }
     ofSetColor(25);
-
+    soundpack = packlist[selPack];
 
 }
 //--------------------------------------------------------------
@@ -46,25 +46,25 @@ void ofApp::setup(){
     pitTog.addListener(this, &ofApp::resetPitch);
 
 
-    volumes.setup("SAMPLER VOLUMES");
-
-    volumes.add(vol1.setup("Snd 1 Vol", 0.8, 0.1, 1));
+    volumes.setup("Sampler:");
+    volumes.add(soundpack);
+    volumes.add(vol1.setup("Snd 1 Vol", 0.8, 0, 1));
     volumes.add(pit1.setup("Snd 1 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol2.setup("Snd 2 Vol", 0.8, 0.1, 1));
+    volumes.add(vol2.setup("Snd 2 Vol", 0.8, 0, 1));
     volumes.add(pit2.setup("Snd 2 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol3.setup("Snd 3 Vol", 0.8, 0.1, 1));
+    volumes.add(vol3.setup("Snd 3 Vol", 0.8, 0, 1));
     volumes.add(pit3.setup("Snd 3 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol4.setup("Snd 4 Vol", 0.8, 0.1, 1));
+    volumes.add(vol4.setup("Snd 4 Vol", 0.8, 0, 1));
     volumes.add(pit4.setup("Snd 4 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol5.setup("Snd 5 Vol", 0.8, 0.1, 1));
+    volumes.add(vol5.setup("Snd 5 Vol", 0.8, 0, 1));
     volumes.add(pit5.setup("Snd 5 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol6.setup("Snd 6 Vol", 0.8, 0.1, 1));
+    volumes.add(vol6.setup("Snd 6 Vol", 0.8, 0, 1));
     volumes.add(pit6.setup("Snd 6 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol7.setup("Snd 7 Vol", 0.8, 0.1, 1));
+    volumes.add(vol7.setup("Snd 7 Vol", 0.8, 0, 1));
     volumes.add(pit7.setup("Snd 7 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol8.setup("Snd 8 Vol", 0.8, 0.1, 1));
+    volumes.add(vol8.setup("Snd 8 Vol", 0.8, 0, 1));
     volumes.add(pit8.setup("Snd 8 Pitch", defaultPitch, minPitch, maxPitch));
-    volumes.add(vol9.setup("Snd 9 Vol", 0.8, 0.1, 1));
+    volumes.add(vol9.setup("Snd 9 Vol", 0.8, 0, 1));
     volumes.add(pit9.setup("Snd 9 Pitch", defaultPitch, minPitch, maxPitch));
     volumes.add(volTog.setup("Reset Volumes"));
     volumes.add(pitTog.setup("Reset Pitches"));
@@ -140,6 +140,9 @@ void ofApp::draw(){
       i->snd.setVolume(i->volume);
       i->snd.setSpeed(i->pitch);
       i->position = i->snd.getPosition();
+      if(i->snd.getPosition()-i->trim >= i->trim){
+          i->snd.setPosition(0.0f);
+      }
 
     }
 }
@@ -151,8 +154,17 @@ void ofApp::keyPressed(int key){
 
     }
     if (key == OF_KEY_BACKSPACE){
-        Loop::loops.back()->snd.stop();
-        Loop::loops.pop_back();
+        if (Loop::loops.empty()){
+        // do nothing
+            cout << "can't delete a loop if no loops are playing" << endl;
+        } else {
+            Loop::loops.back()->snd.stop();
+            Loop::loops.back()->snd.unload();
+            Loop::loops.pop_back();
+            Loop::count--;
+        }
+
+
 
     }
 
@@ -290,7 +302,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd2.getPositionMS());
                newLoop->snd.setVolume(vol2);
                newLoop->volume = snd2.getVolume();
-               newLoop->snd.setSpeed(pit2);
+              newLoop->pitch = snd2.getSpeed();
                newLoop->play();
 
 
@@ -305,7 +317,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd3.getPositionMS());
                newLoop->snd.setVolume(vol3);
                newLoop->volume = snd3.getVolume();
-               newLoop->snd.setSpeed(pit3);
+               newLoop->pitch = snd3.getSpeed();
                newLoop->play();
            }
            snd3.stop();
@@ -318,7 +330,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd4.getPositionMS());
                newLoop->snd.setVolume(vol4);
                newLoop->volume = snd4.getVolume();
-               newLoop->snd.setSpeed(pit4);
+               newLoop->pitch = snd4.getSpeed();
                newLoop->play();
             }
            snd4.stop();
@@ -331,7 +343,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd5.getPositionMS());
                newLoop->snd.setVolume(vol5);
                newLoop->volume = snd5.getVolume();
-               newLoop->snd.setSpeed(pit5);
+               newLoop->pitch = snd5.getSpeed();
                newLoop->play();
            }
            snd5.stop();
@@ -344,7 +356,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd6.getPositionMS());
                newLoop->snd.setVolume(vol6);
                newLoop->volume = snd6.getVolume();
-               newLoop->snd.setSpeed(pit6);
+               newLoop->pitch = snd6.getSpeed();;
                newLoop->play();
            }
            snd6.stop();
@@ -357,7 +369,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd7.getPositionMS());
                newLoop->snd.setVolume(vol7);
                newLoop->volume = snd7.getVolume();
-               newLoop->snd.setSpeed(pit7);
+               newLoop->pitch = snd7.getSpeed();
                newLoop->play();
            }
            snd7.stop();
@@ -370,7 +382,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd8.getPositionMS());
                newLoop->snd.setVolume(vol8);
                newLoop->volume = snd8.getVolume();
-               newLoop->snd.setSpeed(pit8);
+               newLoop->pitch = snd8.getSpeed();
                newLoop->play();
            }
            snd8.stop();
@@ -383,7 +395,7 @@ void ofApp::keyReleased(int key){
                newLoop->snd.setPositionMS(snd9.getPositionMS());
                newLoop->snd.setVolume(vol9);
                newLoop->volume = snd9.getVolume();
-               newLoop->snd.setSpeed(pit9);
+               newLoop->pitch = snd9.getSpeed();;
                newLoop->play();
            }
 

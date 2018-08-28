@@ -6,7 +6,6 @@
 #include "ofxBaseGui.h"
 #include "loop.h"
 
-
 class ofApp : public ofBaseApp{
 
 	public:
@@ -27,8 +26,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         void loadPack();
-
-
+        ofParameter<string> soundpack;
         ofxGuiGroup volumes;
         ofxButton volTog;
         ofxFloatSlider vol1;
@@ -65,6 +63,7 @@ class ofApp : public ofBaseApp{
         int listSize;
         int selPack = 0;
         ofSoundPlayer snd1,snd2,snd3,snd4,snd5,snd6,snd7,snd8,snd9;
+
         vector<ofSoundPlayer> sounds;
 
 
