@@ -139,6 +139,8 @@ void ofApp::draw(){
       i->box.draw();
       i->snd.setVolume(i->volume);
       i->snd.setSpeed(i->pitch);
+      i->position = i->snd.getPosition();
+
     }
 }
 
@@ -259,16 +261,17 @@ void ofApp::keyReleased(int key){
            //if the loop function is triggered, we will load a new copy of the current sound to snd01, and play it from the same point
            //it's currently playing from...then we stop the original, now we store the new looping sound in a loop array of it's own...
            //this is so the loop will still play when you change sound pack...
-           if (loop) {
-                  Loop* newLoop = new Loop();
-                  Loop::loops.push_back(newLoop);
-                  newLoop->setup("wav/"+packlist[selPack]+"/0001.wav");
-                  newLoop->snd.setPositionMS(snd1.getPositionMS());
-                  newLoop->snd.setVolume(vol1);
-                  newLoop->volume = snd1.getVolume();
-                  newLoop->pitch = snd1.getSpeed();
-                  newLoop->snd.setSpeed(pit1);
-                  newLoop->play();
+           if(loop == true && Loop::count != 10){
+
+                      Loop* newLoop = new Loop();
+                      Loop::loops.push_back(newLoop);
+                      newLoop->setup("wav/"+packlist[selPack]+"/0001.wav");
+                      newLoop->snd.setPositionMS(snd1.getPositionMS());
+                      newLoop->snd.setVolume(vol1);
+                      newLoop->volume = snd1.getVolume();
+                      newLoop->pitch = snd1.getSpeed();
+
+                      newLoop->play();
 
 //                //we're moving the sound to the looper panel now, updating the pitch and volume from the original sound.
 //                snd01.setSpeed(pit1);
@@ -280,7 +283,7 @@ void ofApp::keyReleased(int key){
            snd1.stop();
            break;
            case '2':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0002.wav");
@@ -295,7 +298,7 @@ void ofApp::keyReleased(int key){
            snd2.stop();
            break;
            case '3':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0003.wav");
@@ -308,7 +311,7 @@ void ofApp::keyReleased(int key){
            snd3.stop();
            break;
            case '4':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0004.wav");
@@ -321,7 +324,7 @@ void ofApp::keyReleased(int key){
            snd4.stop();
            break;
            case '5':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0005.wav");
@@ -334,7 +337,7 @@ void ofApp::keyReleased(int key){
            snd5.stop();
            break;
            case '6':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0006.wav");
@@ -347,7 +350,7 @@ void ofApp::keyReleased(int key){
            snd6.stop();
            break;
            case '7':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0007.wav");
@@ -360,7 +363,7 @@ void ofApp::keyReleased(int key){
            snd7.stop();
            break;
            case '8':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0008.wav");
@@ -373,7 +376,7 @@ void ofApp::keyReleased(int key){
            snd8.stop();
            break;
            case '9':
-           if (loop) {
+           if(loop == true && Loop::count != 10){
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
                newLoop->setup("wav/"+packlist[selPack]+"/0009.wav");
