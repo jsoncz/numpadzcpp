@@ -14,6 +14,7 @@ Project{
         files: [
             'src/loop.cpp',
             'src/loop.h',
+            'src/loop.h.autosave',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
@@ -22,6 +23,10 @@ Project{
         of.addons: [
             'ofxGui',
             'ofxXmlSettings',
+            'ofxSoundObjects-master',
+            'ofxAudioFile-master',
+            'ofxSoundObjects',
+            'ofxMaxim',
         ]
 
         // additional flags for the project. the of module sets some

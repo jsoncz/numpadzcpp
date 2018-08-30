@@ -4,6 +4,9 @@ int Loop::count = 0;
 int Loop::ID = 0;
 vector<Loop*>Loop::loops = {};
 
+//class SetSoundValues;
+// SetSoundValues setval;
+
 void ofApp::loadPack(){
     ifstream fin; //declare a file stream
     fin.open( ofToDataPath("wav/packlist.txt").c_str() ); //open packlist
@@ -31,6 +34,10 @@ void ofApp::loadPack(){
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+
+
+    ofSetWindowTitle("NumPadZ");
+    ofxGuiSetFont("Helmet.ttf",9, true, true);
     ofSetColor(255,255,255,100);
     ofDrawRectangle(100,ofGetHeight()/2,5*128,200);
     ofBackground(54, 54, 54);
@@ -40,11 +47,12 @@ void ofApp::setup(){
 //    ofxDatGui* gui = new ofxDatGui( ofxDatGuiAnchor::BOTTOM_LEFT );
 //    gui->addHeader("NumPadz");
 
+
     sounds = {snd1,snd2,snd3,snd4,snd5,snd6,snd7,snd8,snd9};
     loadPack();
     volTog.addListener(this, &ofApp::resetVol);
     pitTog.addListener(this, &ofApp::resetPitch);
-
+    loadLoopBtn.addListener(this, &ofApp::loadLoop);
 
     volumes.setup("Sampler:");
     volumes.add(soundpack);
@@ -69,7 +77,43 @@ void ofApp::setup(){
     volumes.add(volTog.setup("Reset Volumes"));
     volumes.add(pitTog.setup("Reset Pitches"));
 
+    menu.setup("Menu");
+    menu.setPosition(700,100);
+    menu.add(loadLoopBtn.setup("load loop"));
+
+
 }
+
+
+void ofApp::loadLoop(){
+//    if (!loadDialog.isThreadRunning())   {
+//        loadDialog.startThread();
+//    }
+
+    ofFileDialogResult result = ofSystemLoadDialog("Load .loop setting file");
+    if(result.bSuccess) {
+        string path = result.getPath();
+        if (path.substr(path.find_last_of(".")+1) == "loop") {
+            if(Loop::count != 10){
+                ifstream input(path);
+                string wav;
+                float vol,pit, trim;
+                input >> wav >> vol >> pit >> trim;
+
+                Loop* newLoop = new Loop();
+                Loop::loops.push_back(newLoop);
+                newLoop->setup(wav);
+                newLoop->snd.setVolume(vol);
+                newLoop->volume = vol;
+                newLoop->pitch = pit;
+                newLoop->trim = trim;
+
+                newLoop->play();
+            } else {cout << "invalid file - must be a .loop file"<< endl;}
+        }
+    }
+ }
+
 void ofApp::resetVol(){
     for (int i = 0; i < 9; i++){
        vol1 = 0.8;vol2 = 0.8;vol3 = 0.8;vol4 = 0.8;vol5 = 0.8;vol6 = 0.8;vol7 = 0.8;vol8 = 0.8;vol9 = 0.8;
@@ -96,7 +140,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    menu.draw();
     volumes.draw();
     //set volume to what is on the slider...
     snd1.setVolume(vol1);
@@ -118,6 +162,7 @@ void ofApp::draw(){
     snd7.setSpeed(pit7);
     snd8.setSpeed(pit8);
     snd9.setSpeed(pit9);
+
     //draw Loop::loops if they exist
 
 
@@ -133,18 +178,22 @@ void ofApp::draw(){
         // because the top corner is 0,0)
         ofDrawRectangle(50+i*width,ofGetHeight()-50,width,-(fftSmooth[i] * 100));
     }
+//attempt to multi thread the latter loop of loops....
+//    if(setval.isThreadRunning()==false){
+//        setval.startThread();
+//    }
 
-    for (auto i : Loop::loops){
+   for (auto i : Loop::loops){
 
-      i->box.draw();
-      i->snd.setVolume(i->volume);
-      i->snd.setSpeed(i->pitch);
-      i->position = i->snd.getPosition();
+    i->box.draw();
+    i->snd.setVolume(i->volume);
+    i->snd.setSpeed(i->pitch);
+    i->position = i->snd.getPosition();
       if(i->snd.getPosition()-i->trim >= i->trim){
           i->snd.setPosition(0.0f);
       }
 
-    }
+  }
 }
 
 void ofApp::keyPressed(int key){

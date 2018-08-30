@@ -14,6 +14,8 @@ class ofApp : public ofBaseApp{
 		void draw();
         void resetVol();
         void resetPitch();
+        void loadLoop();
+
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -26,6 +28,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         void loadPack();
+
+        ofxButton loadLoopBtn;
         ofParameter<string> soundpack;
         ofxGuiGroup volumes;
         ofxButton volTog;
@@ -63,12 +67,17 @@ class ofApp : public ofBaseApp{
         int listSize;
         int selPack = 0;
         ofSoundPlayer snd1,snd2,snd3,snd4,snd5,snd6,snd7,snd8,snd9;
-
         vector<ofSoundPlayer> sounds;
-
 
         ofSoundPlayer snd;
         ofxButton button;
         ofxFloatSlider volume;
+        ofxPanel menu;
+
+
+
+
+
+
 
 };
