@@ -23,9 +23,6 @@ Project{
         of.addons: [
             'ofxGui',
             'ofxXmlSettings',
-            'ofxSoundObjects-master',
-            'ofxAudioFile-master',
-            'ofxSoundObjects',
             'ofxMaxim',
         ]
 

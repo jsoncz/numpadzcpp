@@ -2,7 +2,6 @@
 #define LOOP_H
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "ofxMaxim.h"
 
 class Loop{
 
@@ -25,13 +24,16 @@ public:
     ofSoundPlayer snd;
     ofxPanel box;
     ofxButton del;
-    ofxButton save;
-    ofxButton load;
+//    ofxButton save;
+    ofParameterGroup effects;
 
+    ofParameter<bool> mute;
+    ofParameter<bool> shuffle;
     ofxFloatSlider volume;
     ofxFloatSlider pitch;
     ofxFloatSlider position;
-    ofxFloatSlider trim;
+    ofParameter<float> trim;
+    ofParameter<int> numSlices;
     string sampleFile;
     string loopData;
   };

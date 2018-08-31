@@ -14,9 +14,9 @@ class ofApp : public ofBaseApp{
 		void draw();
         void resetVol();
         void resetPitch();
-        void loadLoop();
-
-		void keyPressed(int key);
+        void loadProject();
+        void saveProject();
+        void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
 		void mouseDragged(int x, int y, int button);
@@ -29,7 +29,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         void loadPack();
 
-        ofxButton loadLoopBtn;
+
         ofParameter<string> soundpack;
         ofxGuiGroup volumes;
         ofxButton volTog;
@@ -73,11 +73,11 @@ class ofApp : public ofBaseApp{
         ofxButton button;
         ofxFloatSlider volume;
         ofxPanel menu;
+        ofParameterGroup params;
+        ofParameter<bool> bTrimTog;
 
-
-
-
-
-
+        ofxFloatSlider masterPitch;
+        ofxButton loadPrj;
+        ofxButton savePrj;
 
 };

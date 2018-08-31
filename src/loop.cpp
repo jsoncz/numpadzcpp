@@ -4,25 +4,25 @@
 
 vector<Loop*>loops = {};
 
-void Loop::saveLoop(){
-          ofstream ofs;
-          ofFileDialogResult result = ofSystemSaveDialog("loop.loop", "Save Loop Settings As:");
-          if(!result.bSuccess){
+//void Loop::saveLoop(){
+//          ofstream ofs;
+//          ofFileDialogResult result = ofSystemSaveDialog("loop.loop", "Save Loop Settings As:");
+//          if(!result.bSuccess){
 
-          }
-          if(result.bSuccess) {
-              cout << "this is file:" << result.filePath << endl;
-          }
-            cout << "the fucking file name is: " << result.filePath << endl;
-            ofs.open(result.filePath);
+//          }
+//          if(result.bSuccess) {
+//              cout << "this is file:" << result.filePath << endl;
+//          }
+//            cout << "the fucking file name is: " << result.filePath << endl;
+//            ofs.open(result.filePath);
 
-          this->Loop::sampleFile.erase(
-              remove( this->Loop::sampleFile.begin(), this->Loop::sampleFile.end(), '\"' ),
-              this->Loop::sampleFile.end()
-              );
-          ofs << this->sampleFile << "\n" << this->volume << "\n" << this->pitch << "\n" << this->trim;
-          ofs.close();
-    }
+//          this->Loop::sampleFile.erase(
+//              remove( this->Loop::sampleFile.begin(), this->Loop::sampleFile.end(), '\"' ),
+//              this->Loop::sampleFile.end()
+//              );
+//          ofs << this->sampleFile << "\n" << this->volume << "\n" << this->pitch << "\n" << this->trim;
+//          ofs.close();
+//    }
 
 
 void Loop::delLoop(){
@@ -48,7 +48,6 @@ void Loop::setup(const filesystem::path& fileName){
     if (count < 11){
         ++count;
         id = ID++;
-        cout << id << endl;
         snd.load(fileName);
         snd.setLoop(true);
         snd.setMultiPlay(true);
@@ -59,21 +58,59 @@ void Loop::setup(const filesystem::path& fileName){
             );
         box.setup("loop:" +sampleFile.erase(0,4));
         sampleFile = ofToString(fileName);
-        if (count < 6){
-            box.setPosition(400,110*count);
+        if (count == 1){
+             box.setPosition(290,20);
         }
-        if (count >= 6){
-            box.setPosition(610,110*(count-5));
+        if (count == 2){
+             box.setPosition(290,170);
         }
+        if (count == 3){
+             box.setPosition(290,320);
+        }
+        if (count == 4){
+             box.setPosition(290,470);
+        }
+        if (count == 5){
+             box.setPosition(290,620);
+        }
+        if (count == 6){
+             box.setPosition(520,20);
+        }
+        if (count == 7){
+             box.setPosition(520,170);
+        }
+        if (count == 8){
+             box.setPosition(520,320);
+        }
+        if (count == 9){
+             box.setPosition(520,470);
+        }
+        if (count == 10){
+            box.setPosition(520,620);
+        }
+
      //ofxDatGui* loopGui = new ofxDatGui(400,75*count);
         box.add(del.setup("delete"));
-        box.add(save.setup("save"));
+        box.add(mute.set("Mute", false));
+
+//        box.add(save.setup("save"));
         box.add(volume.setup("volume ", 0.8, 0, 1));
         box.add(pitch.setup("pitch",1, 0.1, 3));
-        box.add(trim.setup("trim", 1,0,1));
+        box.add(trim.set("trim", 1,0,1));
         box.add(position.setup("position",0,0,1));
+
+        effects.add(numSlices.set("Shuffler", 0, 0, 4));
+
+
+
+
+        effects.setName("FX");
+        box.add(effects);
+
         del.addListener(this, &Loop::delLoop);
-        save.addListener(this, &Loop::saveLoop);
+
+//        save.addListener(this, &Loop::saveLoop);
+
 
     }
 }
