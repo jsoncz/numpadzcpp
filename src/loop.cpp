@@ -45,7 +45,7 @@ void Loop::delLoop(){
 
 void Loop::setup(const filesystem::path& fileName){
      // cout << int(count) << endl;
-    if (count < 11){
+    if (count != 12){
         ++count;
         id = ID++;
         snd.load(fileName);
@@ -59,36 +59,41 @@ void Loop::setup(const filesystem::path& fileName){
         box.setup("loop:" +sampleFile.erase(0,4));
         sampleFile = ofToString(fileName);
         if (count == 1){
-             box.setPosition(290,20);
+             box.setPosition(250,20);
         }
         if (count == 2){
-             box.setPosition(290,170);
+             box.setPosition(250,170);
         }
         if (count == 3){
-             box.setPosition(290,320);
+             box.setPosition(250,320);
         }
         if (count == 4){
-             box.setPosition(290,470);
+             box.setPosition(250,470);
         }
         if (count == 5){
-             box.setPosition(290,620);
+             box.setPosition(500,20);
         }
         if (count == 6){
-             box.setPosition(520,20);
+             box.setPosition(500,170);
         }
         if (count == 7){
-             box.setPosition(520,170);
+             box.setPosition(500,320);
         }
         if (count == 8){
-             box.setPosition(520,320);
+             box.setPosition(500,470);
         }
         if (count == 9){
-             box.setPosition(520,470);
+             box.setPosition(750,20);
         }
         if (count == 10){
-            box.setPosition(520,620);
+            box.setPosition(750,170);
         }
-
+        if (count == 11){
+            box.setPosition(750,320);
+        }
+        if (count == 12){
+            box.setPosition(750,470);
+        }
      //ofxDatGui* loopGui = new ofxDatGui(400,75*count);
         box.add(del.setup("delete"));
         box.add(mute.set("Mute", false));

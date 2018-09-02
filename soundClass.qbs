@@ -23,7 +23,9 @@ Project{
         of.addons: [
             'ofxGui',
             'ofxXmlSettings',
-            'ofxMaxim',
+            'ofxAudioFile',
+            'ofxGui',
+	    'ofxSoundObjects',
         ]
 
         // additional flags for the project. the of module sets some

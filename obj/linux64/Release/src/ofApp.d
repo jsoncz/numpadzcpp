@@ -530,7 +530,19 @@ obj/linux64/Release/src/ofApp.o: \
  /home/jason/Dev/OF/openFramework/addons/ofxGui/src/ofxGui.h \
  /home/jason/Dev/OF/openFramework/addons/ofxGui/src/ofxSliderGroup.h \
  /home/jason/Dev/OF/openFramework/addons/ofxGui/src/ofxColorPicker.h \
- /home/jason/Dev/OF/openFramework/apps/myApps/soundClass/src/loop.h
+ /home/jason/Dev/OF/openFramework/apps/myApps/soundClass/src/loop.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundObjects.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundObject.h \
+ /home/jason/Dev/OF/openFramework/libs/openFrameworks/types/ofBaseTypes.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundMixer.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundFile.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxAudioFile/src/ofxAudioFile.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/libs/libsndfile/include/include/sndfile.hh \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/libs/libsndfile/include/include/sndfile.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundPlayerObject.h \
+ /home/jason/Dev/OF/openFramework/libs/openFrameworks/sound/ofSoundUtils.h \
+ /home/jason/Dev/OF/openFramework/libs/openFrameworks/sound/ofSoundBuffer.h \
+ /home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundMultiplexer.h
 
 /home/jason/Dev/OF/openFramework/apps/myApps/soundClass/src/ofApp.h:
 
@@ -1625,3 +1637,27 @@ obj/linux64/Release/src/ofApp.o: \
 /home/jason/Dev/OF/openFramework/addons/ofxGui/src/ofxColorPicker.h:
 
 /home/jason/Dev/OF/openFramework/apps/myApps/soundClass/src/loop.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundObjects.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundObject.h:
+
+/home/jason/Dev/OF/openFramework/libs/openFrameworks/types/ofBaseTypes.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundMixer.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundFile.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxAudioFile/src/ofxAudioFile.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/libs/libsndfile/include/include/sndfile.hh:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/libs/libsndfile/include/include/sndfile.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundPlayerObject.h:
+
+/home/jason/Dev/OF/openFramework/libs/openFrameworks/sound/ofSoundUtils.h:
+
+/home/jason/Dev/OF/openFramework/libs/openFrameworks/sound/ofSoundBuffer.h:
+
+/home/jason/Dev/OF/openFramework/addons/ofxSoundObjects/src/ofxSoundMultiplexer.h:

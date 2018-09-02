@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.0, 2018-08-30T10:14:12. -->
+<!-- Written by QtCreator 4.7.0, 2018-09-02T15:04:34. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -80,7 +80,7 @@
       <valuemap type="QVariantMap" key="Qbs.Configuration">
        <value type="bool" key="modules.Qt.quick.qmlDebugging">true</value>
        <value type="QString" key="qbs.defaultBuildVariant">debug</value>
-       <value type="QString" key="qbs.profile">qtc_Desktop_1887170f</value>
+       <value type="QString" key="qbs.profile">qtc_Desktop__1887170f</value>
        <value type="bool" key="qbspm.forceProbes">false</value>
       </valuemap>
       <value type="bool" key="Qbs.DryKeepGoing">false</value>
@@ -138,7 +138,7 @@
       <value type="bool" key="Qbs.CleanInstallRoot">false</value>
       <valuemap type="QVariantMap" key="Qbs.Configuration">
        <value type="QString" key="qbs.defaultBuildVariant">release</value>
-       <value type="QString" key="qbs.profile">qtc_Desktop_1887170f</value>
+       <value type="QString" key="qbs.profile">qtc_Desktop__1887170f</value>
       </valuemap>
       <value type="bool" key="Qbs.DryKeepGoing">false</value>
       <value type="bool" key="Qbs.DryRun">false</value>

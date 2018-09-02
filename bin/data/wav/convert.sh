@@ -13,7 +13,7 @@ fi
 
 echo ${a}
 for i in *.wav ; do
-	  ffmpeg -i $i -ar 22050 ${a}/$i;
+	  ffmpeg -i $i -ar 44100 ${a}/$i;
 done
 	
 echo "Completed! this pack should automatically be added to the program"

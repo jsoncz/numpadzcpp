@@ -38,8 +38,8 @@ void ofApp::setup(){
 
     ofSetWindowTitle("NumPadZ");
     ofxGuiSetFont("Helmet.ttf",9, true, true);
-    ofSetColor(255,255,255,100);
-    ofDrawRectangle(100,ofGetHeight()/2,5*128,200);
+    ofSetColor(255,255,255,130);
+    ofDrawRectangle(130,ofGetHeight()/2,5*128,200);
     ofBackground(54, 54, 54);
      for (int i = 0; i < 8192; i++){
           fftSmooth[i] = 0;
@@ -82,7 +82,7 @@ void ofApp::setup(){
     volumes.add(pitTog.setup("Reset Pitches"));
 
     menu.setup("Menu");
-    menu.setPosition(800,10);
+    menu.setPosition(10,350);
     menu.add(savePrj.setup("Save Project"));
     menu.add(loadPrj.setup("Load Project"));
     menu.add(masterPitch.setup("master pitch", 0.5, 0.1,1));
@@ -137,7 +137,7 @@ void ofApp::loadProject(){
     //load project
         string path = result.getPath();
         if (path.substr(path.find_last_of(".")+1) == "npz") {
-            if(Loop::count != 10){
+            if(Loop::count != 13){
                 ifstream input(path);
                 string wav;
                 float vol, pit, trim, mstpit;
@@ -225,7 +225,7 @@ void ofApp::draw(){
                    180 + 50 * sin(i * 0.032 + time));
         // (we use negative height here, because we want to flip them
         // because the top corner is 0,0)
-        ofDrawRectangle(50+i*width,ofGetHeight()-50,width,-(fftSmooth[i] * 100));
+        ofDrawRectangle(10+i*width,ofGetHeight()-10,width,-(fftSmooth[i] * 130));
     }
 
    //cheap method I know
@@ -286,7 +286,7 @@ void ofApp::keyPressed(int key){
     switch (key) {
     //shift soundpack up
     case '+':
-    if (selPack < listSize-1){
+    if (selPack+1 < listSize-1){
         selPack++;
         loadPack();
     }
@@ -388,7 +388,7 @@ void ofApp::keyReleased(int key){
            //if the loop function is triggered, we will load a new copy of the current sound to snd01, and play it from the same point
            //it's currently playing from...then we stop the original, now we store the new looping sound in a loop array of it's own...
            //this is so the loop will still play when you change sound pack...
-           if(loop == true && Loop::count != 10){
+           if(loop == true && Loop::count != 13){
 
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
@@ -412,7 +412,7 @@ void ofApp::keyReleased(int key){
     snd1.stop();
     break;
     case '2':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0002.wav");
@@ -428,7 +428,7 @@ void ofApp::keyReleased(int key){
     snd2.stop();
     break;
     case '3':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0003.wav");
@@ -442,7 +442,7 @@ void ofApp::keyReleased(int key){
     snd3.stop();
     break;
     case '4':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0004.wav");
@@ -456,7 +456,7 @@ void ofApp::keyReleased(int key){
     snd4.stop();
     break;
     case '5':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0005.wav");
@@ -470,7 +470,7 @@ void ofApp::keyReleased(int key){
     snd5.stop();
     break;
     case '6':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0006.wav");
@@ -484,7 +484,7 @@ void ofApp::keyReleased(int key){
     snd6.stop();
     break;
     case '7':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0007.wav");
@@ -498,7 +498,7 @@ void ofApp::keyReleased(int key){
     snd7.stop();
     break;
     case '8':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0008.wav");
@@ -512,7 +512,7 @@ void ofApp::keyReleased(int key){
     snd8.stop();
     break;
     case '9':
-    if(loop == true && Loop::count != 10){
+    if(loop == true && Loop::count != 13){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0009.wav");

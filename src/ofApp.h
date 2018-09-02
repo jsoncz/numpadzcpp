@@ -5,6 +5,7 @@
 #include "ofxGui.h"
 #include "ofxBaseGui.h"
 #include "loop.h"
+#include "ofxSoundObjects.h"
 
 class ofApp : public ofBaseApp{
 

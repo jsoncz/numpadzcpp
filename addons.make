@@ -1,3 +1,4 @@
 ofxGui
 ofxXmlSettings
-ofxMaxim
+ofxAudioFile
+ofxSoundObjects
