@@ -1,4 +1,7 @@
 ofxGui
 ofxXmlSettings
+ofxMidi
+ofxPDSP
+ofxSIMDFloats
+ofxOsc
 ofxAudioFile
-ofxSoundObjects

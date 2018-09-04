@@ -12,6 +12,8 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            "src/seq.cpp",
+            "src/seq.h",
             'src/loop.cpp',
             'src/loop.h',
             'src/loop.h.autosave',
@@ -23,9 +25,12 @@ Project{
         of.addons: [
             'ofxGui',
             'ofxXmlSettings',
+            'ofxPDSP',
+            'ofxMidi',
+            'ofxSIMDFloats',
+            'ofxOsc',
             'ofxAudioFile',
-            'ofxGui',
-	    'ofxSoundObjects',
+	   	    
         ]
 
         // additional flags for the project. the of module sets some

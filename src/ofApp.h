@@ -5,14 +5,16 @@
 #include "ofxGui.h"
 #include "ofxBaseGui.h"
 #include "loop.h"
-#include "ofxSoundObjects.h"
+#include "seq.h"
+
 
 class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
 		void update();
-		void draw();
+        void draw();
+
         void resetVol();
         void resetPitch();
         void loadProject();
@@ -61,6 +63,7 @@ class ofApp : public ofBaseApp{
         float defaultPitch = 1.00;
         float maxPitch = 4.00;
         bool loop = false;
+        bool sequence = false;
         vector<ofxFloatSlider> lPList;
         vector<ofxFloatSlider> volList;
 

@@ -2,8 +2,10 @@
 
 int Loop::count = 0;
 int Loop::ID = 0;
+int Seq::countSeq = 0;
+int Seq::ID = 0;
 vector<Loop*>Loop::loops = {};
-
+vector<Seq*>Seq::seqs = {};
 //class SetSoundValues;
 // SetSoundValues setval;
 
@@ -34,7 +36,8 @@ void ofApp::loadPack(){
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-
+    ofSetVerticalSync(true);
+    ofSetFrameRate(120);
 
     ofSetWindowTitle("NumPadZ");
     ofxGuiSetFont("Helmet.ttf",9, true, true);
@@ -86,7 +89,7 @@ void ofApp::setup(){
     menu.add(savePrj.setup("Save Project"));
     menu.add(loadPrj.setup("Load Project"));
     menu.add(masterPitch.setup("master pitch", 0.5, 0.1,1));
-    params.add(bTrimTog.set("toggle trim",false));
+    params.add(bTrimTog.set("toggle all FX",false));
 
     params.setName("Effects");
     menu.add(params);
@@ -101,20 +104,17 @@ void ofApp::saveProject(){
               ofstream ofs;
               ofFileDialogResult result = ofSystemSaveDialog(".npz", "Save Loop Settings As:");
               if(!result.bSuccess){
+                   cout << "Error saving project!" << endl;
+              }
 
-              }
-              if(result.bSuccess) {
-                  cout << "this is file:" << result.filePath << endl;
-              }
-                cout << "the fucking file name is: " << result.filePath << endl;
                 ofs.open(result.filePath);
               for (auto i : Loop::loops){
-                  i->sampleFile.erase(
+                      i->sampleFile.erase(
                       remove( i->sampleFile.begin(), i->sampleFile.end(), '\"' ),
                       i->sampleFile.end()
                       );
-                  ofs << i->sampleFile << "\n" << i->volume << "\n" << i->pitch << "\n" << i->trim << "\n" << masterPitch << "\n" << i->mute;
-
+              ofs << i->sampleFile << "\n" << i->volume << "\n" << i->pitch << "\n" << i->trim << "\n" << masterPitch << "\n" << i->mute << "\n";
+              cout << i->sampleFile << endl;
               }
 
               ofs.close();
@@ -122,9 +122,6 @@ void ofApp::saveProject(){
 
 
 void ofApp::loadProject(){
-//    if (!loadDialog.isThreadRunning())   {
-//        loadDialog.startThread();
-//    }
 
     ofFileDialogResult result = ofSystemLoadDialog("Load Project setting file");
     if(result.bSuccess) {
@@ -137,7 +134,7 @@ void ofApp::loadProject(){
     //load project
         string path = result.getPath();
         if (path.substr(path.find_last_of(".")+1) == "npz") {
-            if(Loop::count != 13){
+            if(Loop::count <12){
                 ifstream input(path);
                 string wav;
                 float vol, pit, trim, mstpit;
@@ -147,6 +144,7 @@ void ofApp::loadProject(){
 
                     Loop* newLoop = new Loop();
                     Loop::loops.push_back(newLoop);
+                    cout << wav << endl;
                     newLoop->setup(wav);
                     newLoop->snd.setVolume(vol);
                     newLoop->volume = vol;
@@ -212,9 +210,6 @@ void ofApp::draw(){
     snd8.setSpeed(pit8+(masterPitch-.5));
     snd9.setSpeed(pit9+(masterPitch-.5));
 
-    //draw Loop::loops if they exist
-
-
     // draw the fft resutls:
     ofSetColor(255,255,255,255);
     float time = ofGetElapsedTimef();
@@ -231,20 +226,20 @@ void ofApp::draw(){
    //cheap method I know
    vector<float> slices4 = {0, 0.25, 0.5, 0.75, 1};
 
+   for (auto i : Seq::seqs){
+        i->box.draw();
+
+   }
 
    for (auto i : Loop::loops){
 
-    i->box.draw();
-    if (!i->mute){ i->snd.setVolume(i->volume);}
-    if (i->mute) { i->snd.setVolume(0);}
-    i->snd.setSpeed(i->pitch+masterPitch-.5);
+        i->box.draw();
+        if (!i->mute){ i->snd.setVolume(i->volume);}
+        if (i->mute) { i->snd.setVolume(0);}
+        i->snd.setSpeed(i->pitch+masterPitch-.5);
+        i->position = i->snd.getPosition();
 
-    i->position = i->snd.getPosition();
-
-
-
-
-    if (!bTrimTog){
+        if (!bTrimTog){
 
             int randomIndex = rand() % slices4.size();
             if (i->snd.getPosition() - slices4[randomIndex]/i->numSlices >= slices4[randomIndex]/i->numSlices){
@@ -252,19 +247,23 @@ void ofApp::draw(){
                  i->snd.setPosition(slices4[randomIndex]/i->numSlices);
             }
 
-
-        if(i->snd.getPosition()-i->trim >= i->trim){
-          i->snd.setPosition(0.0f);
+            if(i->snd.getPosition()-i->trim >= i->trim){
+              i->snd.setPosition(0.0f);
+            }
         }
-    }
 
-  }
-}
+      }
+    }
 
 void ofApp::keyPressed(int key){
     loop = false;
     if (key == OF_KEY_RETURN){
         loop = true;
+
+    }
+
+    if (key == OF_KEY_ALT){
+        sequence = true;
 
     }
 
@@ -385,10 +384,19 @@ void ofApp::keyReleased(int key){
     //this is so the loop will still play when you change sound pack...
     switch (key) {
            case '1':
+          if(sequence == true && Seq::countSeq < 5){
+             Seq* newSeq = new Seq();
+             Seq::seqs.push_back(newSeq);
+             newSeq->setup("wav/"+packlist[selPack]+"/0001.wav");
+             newSeq->snd.setPositionMS(snd1.getPositionMS());
+             newSeq->snd.setVolume(vol1);
+             newSeq->volume = snd1.getVolume();
+             newSeq->pitch = snd1.getSpeed()-(masterPitch-.5);
+          }
            //if the loop function is triggered, we will load a new copy of the current sound to snd01, and play it from the same point
            //it's currently playing from...then we stop the original, now we store the new looping sound in a loop array of it's own...
            //this is so the loop will still play when you change sound pack...
-           if(loop == true && Loop::count != 13){
+           if(loop == true && Loop::count < 12){
 
                Loop* newLoop = new Loop();
                Loop::loops.push_back(newLoop);
@@ -398,37 +406,46 @@ void ofApp::keyReleased(int key){
                newLoop->volume = snd1.getVolume();
                newLoop->pitch = snd1.getSpeed()-(masterPitch-.5);
 
-
                newLoop->play();
-
-//                //we're moving the sound to the looper panel now, updating the pitch and volume from the original sound.
-//                snd01.setSpeed(pit1);
-//                lp1 = snd1.getSpeed()-(masterPitch-.5);
-
-//                snd01.setVolume(vol1);
-//                loop1 = snd1.getVolume();
-    }
-
+             }
     snd1.stop();
     break;
+
     case '2':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0002.wav");
+       newSeq->snd.setPositionMS(snd2.getPositionMS());
+       newSeq->snd.setVolume(vol2);
+       newSeq->volume = snd2.getVolume();
+       newSeq->pitch = snd2.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0002.wav");
         newLoop->snd.setPositionMS(snd2.getPositionMS());
         newLoop->snd.setVolume(vol2);
         newLoop->volume = snd2.getVolume();
-       newLoop->pitch = snd2.getSpeed()-(masterPitch-.5);
+        newLoop->pitch = snd2.getSpeed()-(masterPitch-.5);
 
         newLoop->play();
-
-
     }
     snd2.stop();
     break;
+
     case '3':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0003.wav");
+       newSeq->snd.setPositionMS(snd3.getPositionMS());
+       newSeq->snd.setVolume(vol3);
+       newSeq->volume = snd3.getVolume();
+       newSeq->pitch = snd3.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0003.wav");
@@ -441,8 +458,18 @@ void ofApp::keyReleased(int key){
     }
     snd3.stop();
     break;
+
     case '4':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0004.wav");
+       newSeq->snd.setPositionMS(snd4.getPositionMS());
+       newSeq->snd.setVolume(vol4);
+       newSeq->volume = snd4.getVolume();
+       newSeq->pitch = snd4.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0004.wav");
@@ -455,8 +482,18 @@ void ofApp::keyReleased(int key){
      }
     snd4.stop();
     break;
+
     case '5':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0005.wav");
+       newSeq->snd.setPositionMS(snd5.getPositionMS());
+       newSeq->snd.setVolume(vol5);
+       newSeq->volume = snd5.getVolume();
+       newSeq->pitch = snd5.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0005.wav");
@@ -469,8 +506,18 @@ void ofApp::keyReleased(int key){
     }
     snd5.stop();
     break;
+
     case '6':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0006.wav");
+       newSeq->snd.setPositionMS(snd6.getPositionMS());
+       newSeq->snd.setVolume(vol6);
+       newSeq->volume = snd6.getVolume();
+       newSeq->pitch = snd6.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0006.wav");
@@ -483,8 +530,18 @@ void ofApp::keyReleased(int key){
     }
     snd6.stop();
     break;
+
     case '7':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0007.wav");
+       newSeq->snd.setPositionMS(snd7.getPositionMS());
+       newSeq->snd.setVolume(vol7);
+       newSeq->volume = snd7.getVolume();
+       newSeq->pitch = snd7.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0007.wav");
@@ -497,8 +554,18 @@ void ofApp::keyReleased(int key){
     }
     snd7.stop();
     break;
+
     case '8':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0008.wav");
+       newSeq->snd.setPositionMS(snd8.getPositionMS());
+       newSeq->snd.setVolume(vol8);
+       newSeq->volume = snd8.getVolume();
+       newSeq->pitch = snd8.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0008.wav");
@@ -511,8 +578,18 @@ void ofApp::keyReleased(int key){
     }
     snd8.stop();
     break;
+
     case '9':
-    if(loop == true && Loop::count != 13){
+    if(sequence == true && Seq::countSeq < 5){
+       Seq* newSeq = new Seq();
+       Seq::seqs.push_back(newSeq);
+       newSeq->setup("wav/"+packlist[selPack]+"/0009.wav");
+       newSeq->snd.setPositionMS(snd9.getPositionMS());
+       newSeq->snd.setVolume(vol9);
+       newSeq->volume = snd9.getVolume();
+       newSeq->pitch = snd9.getSpeed()-(masterPitch-.5);
+    }
+    if(loop == true && Loop::count <12){
         Loop* newLoop = new Loop();
         Loop::loops.push_back(newLoop);
         newLoop->setup("wav/"+packlist[selPack]+"/0009.wav");
@@ -574,5 +651,11 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-
+    if (Loop::count <12){
+        Loop* newLoop = new Loop();
+        Loop::loops.push_back(newLoop);
+        cout << dragInfo.files[0] << endl;
+        newLoop->setup(dragInfo.files[0]);
+        newLoop->play();
+    }
 }

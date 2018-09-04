@@ -4,26 +4,6 @@
 
 vector<Loop*>loops = {};
 
-//void Loop::saveLoop(){
-//          ofstream ofs;
-//          ofFileDialogResult result = ofSystemSaveDialog("loop.loop", "Save Loop Settings As:");
-//          if(!result.bSuccess){
-
-//          }
-//          if(result.bSuccess) {
-//              cout << "this is file:" << result.filePath << endl;
-//          }
-//            cout << "the fucking file name is: " << result.filePath << endl;
-//            ofs.open(result.filePath);
-
-//          this->Loop::sampleFile.erase(
-//              remove( this->Loop::sampleFile.begin(), this->Loop::sampleFile.end(), '\"' ),
-//              this->Loop::sampleFile.end()
-//              );
-//          ofs << this->sampleFile << "\n" << this->volume << "\n" << this->pitch << "\n" << this->trim;
-//          ofs.close();
-//    }
-
 
 void Loop::delLoop(){
 
@@ -42,6 +22,21 @@ void Loop::delLoop(){
           ++it;
        }
 }
+string getFileName(const string& s) {
+
+   char sep = '/';
+
+#ifdef _WIN32
+   sep = '\\';
+#endif
+
+   size_t i = s.rfind(sep, s.length());
+   if (i != string::npos) {
+      return(s.substr(i+1, s.length() - i));
+   }
+
+   return("");
+}
 
 void Loop::setup(const filesystem::path& fileName){
      // cout << int(count) << endl;
@@ -56,8 +51,9 @@ void Loop::setup(const filesystem::path& fileName){
             remove( this->sampleFile.begin(), this->sampleFile.end(), '\"' ),
             this->sampleFile.end()
             );
-        box.setup("loop:" +sampleFile.erase(0,4));
-        sampleFile = ofToString(fileName);
+
+        box.setup("loop:" +getFileName(sampleFile));
+
         if (count == 1){
              box.setPosition(250,20);
         }

@@ -36,6 +36,7 @@ public:
     ofParameter<int> numSlices;
     string sampleFile;
     string loopData;
+    bool wasDragged;
   };
 
 #endif // LOOP_H
