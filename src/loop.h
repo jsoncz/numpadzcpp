@@ -32,8 +32,11 @@ public:
     ofxFloatSlider volume;
     ofxFloatSlider pitch;
     ofxFloatSlider position;
+     ofParameter<float> startPoint;
     ofParameter<float> trim;
     ofParameter<int> numSlices;
+      //ofParameter<float> delay;
+     ofParameter<float> pitchFx;
     string sampleFile;
     string loopData;
     bool wasDragged;

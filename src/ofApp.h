@@ -1,13 +1,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxPanel.h"
 #include "ofxGui.h"
-#include "ofxBaseGui.h"
 #include "loop.h"
 #include "seq.h"
-
-
+#include "ofxSoundObjects.h"
+#include "waveformDraw.h"
 class ofApp : public ofBaseApp{
 
 	public:
@@ -17,6 +15,9 @@ class ofApp : public ofBaseApp{
 
         void resetVol();
         void resetPitch();
+        void stopAll();
+        void startAll();
+        void muteAll();
         void loadProject();
         void saveProject();
         void keyPressed(int key);
@@ -70,6 +71,14 @@ class ofApp : public ofBaseApp{
         vector<string> packlist;
         int listSize;
         int selPack = 0;
+
+        ofSoundStream stream;
+        ofxSoundOutput output;
+        ofxSoundPlayerObject player;
+         ofxSoundPlayerObject player2;
+        vector<ofMesh> waveforms;
+          waveformDraw wave;
+
         ofSoundPlayer snd1,snd2,snd3,snd4,snd5,snd6,snd7,snd8,snd9;
         vector<ofSoundPlayer> sounds;
 
@@ -79,9 +88,15 @@ class ofApp : public ofBaseApp{
         ofxPanel menu;
         ofParameterGroup params;
         ofParameter<bool> bTrimTog;
+        ofxButton  stopTog;
+        ofxButton  startTog;
+        ofxButton muteTog;
 
         ofxFloatSlider masterPitch;
+        ofxFloatSlider bpm;
         ofxButton loadPrj;
         ofxButton savePrj;
 
-};
+
+
+    };

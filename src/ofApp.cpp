@@ -35,6 +35,42 @@ void ofApp::loadPack(){
 }
 //--------------------------------------------------------------
 void ofApp::setup(){
+    stream.printDeviceList();
+    ofSoundStreamSettings soundSettings;
+    auto devices = stream.getDeviceList(ofSoundDevice::Api::ALSA);
+    soundSettings.setOutDevice(devices[6]);
+            soundSettings.numInputChannels = 0;
+            soundSettings.numOutputChannels = 2;
+            soundSettings.sampleRate = player.getSoundFile().getSampleRate();
+            soundSettings.bufferSize = 256;
+            soundSettings.numBuffers = 2;
+
+            stream.setup(soundSettings);
+
+            wave.setup(0, 0, ofGetWidth(), ofGetHeight());
+            player.load(ofToDataPath("wav/time/0005.wav"));
+            player2.load(ofToDataPath("wav/time/0007.wav"));
+
+            player.connectTo(wave).connectTo(output);
+            player2.connectTo(output);
+    waveforms.resize(player.getSoundFile().getNumChannels());
+      waveforms.resize(player2.getSoundFile().getNumChannels());
+    stream.setOutput(output);
+            float h = ofGetHeight()/waveforms.size();
+            ofSoundBuffer buff;
+            player.getSoundFile().readTo(buff);
+              player2.getSoundFile().readTo(buff);
+            for(int i = 0; i < waveforms.size(); i++){
+                ofSoundBuffer b;
+                buff.getChannel(b, i);
+                waveforms[i].setMode(OF_PRIMITIVE_LINE_STRIP);
+                for(int j = 0; j < b.getBuffer().size(); j++ ){
+                    waveforms[i].addVertex({ofMap(j, 0, b.getBuffer().size(), 0, ofGetWidth()), ofMap(b.getBuffer()[j], -1, 1, i*h, (i+1)*h),0.0});
+                }
+            }
+
+            player.setVolume(1.0f);
+
 
     ofSetVerticalSync(true);
     ofSetFrameRate(120);
@@ -55,6 +91,9 @@ void ofApp::setup(){
     loadPack();
     volTog.addListener(this, &ofApp::resetVol);
     pitTog.addListener(this, &ofApp::resetPitch);
+    stopTog.addListener(this, &ofApp::stopAll);
+    startTog.addListener(this, &ofApp::startAll);
+    muteTog.addListener(this, &ofApp::muteAll);
     loadPrj.addListener(this, &ofApp::loadProject);
     savePrj.addListener(this, &ofApp::saveProject);
 
@@ -89,8 +128,11 @@ void ofApp::setup(){
     menu.add(savePrj.setup("Save Project"));
     menu.add(loadPrj.setup("Load Project"));
     menu.add(masterPitch.setup("master pitch", 0.5, 0.1,1));
+    menu.add(bpm.setup("bpm", 100, 60, 240));
     params.add(bTrimTog.set("toggle all FX",false));
-
+    menu.add(stopTog.setup("stop all"));
+    menu.add(startTog.setup("start all"));
+    menu.add(muteTog.setup("mute/unmute all"));
     params.setName("Effects");
     menu.add(params);
 
@@ -113,7 +155,7 @@ void ofApp::saveProject(){
                       remove( i->sampleFile.begin(), i->sampleFile.end(), '\"' ),
                       i->sampleFile.end()
                       );
-              ofs << i->sampleFile << "\n" << i->volume << "\n" << i->pitch << "\n" << i->trim << "\n" << masterPitch << "\n" << i->mute << "\n";
+              ofs << i->sampleFile << "\n" << i->volume << "\n" << i->pitch << "\n" << i->trim << "\n" << masterPitch << "\n" << i->mute << "\n" << i->startPoint << "\n";
               cout << i->sampleFile << endl;
               }
 
@@ -137,9 +179,9 @@ void ofApp::loadProject(){
             if(Loop::count <12){
                 ifstream input(path);
                 string wav;
-                float vol, pit, trim, mstpit;
+                float vol, pit, trim, mstpit, start;
                 bool mut;
-                while(input >> wav >> vol >> pit >> trim >> mstpit >> mut){
+                while(input >> wav >> vol >> pit >> trim >> mstpit >> mut >> start){
 
 
                     Loop* newLoop = new Loop();
@@ -151,6 +193,7 @@ void ofApp::loadProject(){
                     newLoop->pitch = pit;
                     newLoop->trim = trim;
                     newLoop->mute = mut;
+                    newLoop->startPoint = start;
                     masterPitch = mstpit;
                     newLoop->play();
                 }
@@ -160,6 +203,24 @@ void ofApp::loadProject(){
         }
     }
  }
+void ofApp::stopAll(){
+    for (auto i : Loop::loops){
+        i->stop();
+    }
+}
+
+void ofApp::startAll(){
+    for (auto i : Loop::loops){
+        i->stop();
+        i->play();
+    }
+}
+
+void ofApp::muteAll(){
+    for (auto i : Loop::loops){
+        i->mute = !i->mute;
+    }
+}
 
 void ofApp::resetVol(){
     for (int i = 0; i < 9; i++){
@@ -187,6 +248,22 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+//    ofSetColor(ofColor::white);
+//    for(auto&w:waveforms){
+//        w.draw();
+//    }
+//    ofSetColor(ofColor::red);
+//    float playhead = ofMap(player.getPosition(), 0,1,0,ofGetWidth());
+//    ofDrawLine(playhead, 0, playhead, ofGetHeight());
+//    ofSetColor(ofColor::cyan);
+//    ofDrawLine(ofGetMouseX(), 0, ofGetMouseX(), ofGetHeight());
+
+//    ofSetColor(ofColor::white);
+//    wave.draw();
+
+
+//    player.drawDebug(0,0);
+
     menu.draw();
     volumes.draw();
     //set volume to what is on the slider...
@@ -224,13 +301,13 @@ void ofApp::draw(){
     }
 
    //cheap method I know
-   vector<float> slices4 = {0, 0.25, 0.5, 0.75, 1};
+   vector<float> slices4 = {0.06, 0.12, 0.19,0.21, 0.25,0.29, 0.33, 0,37, 0.42, 0.5,0.55,0.62, 0.67, 0.75, 0.81, 0.87, 0.91};
 
    for (auto i : Seq::seqs){
         i->box.draw();
 
    }
-
+    int randomIndex = rand() % slices4.size();
    for (auto i : Loop::loops){
 
         i->box.draw();
@@ -241,14 +318,25 @@ void ofApp::draw(){
 
         if (!bTrimTog){
 
+
+
             int randomIndex = rand() % slices4.size();
-            if (i->snd.getPosition() - slices4[randomIndex]/i->numSlices >= slices4[randomIndex]/i->numSlices){
-                 int randomIndex = rand() % slices4.size();
+            if (i->snd.getPosition() - slices4[randomIndex+4]/i->numSlices >= slices4[randomIndex]/i->numSlices){
+
                  i->snd.setPosition(slices4[randomIndex]/i->numSlices);
             }
+            if (i->pitchFx > 0 && i->snd.getPosition() > slices4[randomIndex]+(i->pitchFx/8)){
 
+                i->snd.setSpeed((i->pitch+slices4[randomIndex])*(i->pitchFx+1/2)/2);
+
+            }
+//TRIM
             if(i->snd.getPosition()-i->trim >= i->trim){
               i->snd.setPosition(0.0f);
+            }
+//START POINT
+            if(i->snd.getPosition() < i->startPoint){
+              i->snd.setPosition(i->startPoint);
             }
         }
 
@@ -288,6 +376,7 @@ void ofApp::keyPressed(int key){
     if (selPack+1 < listSize-1){
         selPack++;
         loadPack();
+
     }
     break;
     //shift soundpack down
@@ -295,6 +384,7 @@ void ofApp::keyPressed(int key){
     if (selPack > 0){
         selPack--;
         loadPack();
+
     }
     break;
     //Remove second to last looping item
@@ -626,7 +716,7 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    player.setPositionMS(ofMap(ofGetMouseX(), 0, ofGetWidth(), 0, player.getDurationMS()));
 }
 
 //--------------------------------------------------------------

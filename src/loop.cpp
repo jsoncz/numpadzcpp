@@ -58,37 +58,37 @@ void Loop::setup(const filesystem::path& fileName){
              box.setPosition(250,20);
         }
         if (count == 2){
-             box.setPosition(250,170);
+             box.setPosition(250,190);
         }
         if (count == 3){
-             box.setPosition(250,320);
+             box.setPosition(250,340);
         }
         if (count == 4){
-             box.setPosition(250,470);
+             box.setPosition(250,490);
         }
         if (count == 5){
              box.setPosition(500,20);
         }
         if (count == 6){
-             box.setPosition(500,170);
+             box.setPosition(500,190);
         }
         if (count == 7){
-             box.setPosition(500,320);
+             box.setPosition(500,340);
         }
         if (count == 8){
-             box.setPosition(500,470);
+             box.setPosition(500,490);
         }
         if (count == 9){
              box.setPosition(750,20);
         }
         if (count == 10){
-            box.setPosition(750,170);
+            box.setPosition(750,190);
         }
         if (count == 11){
-            box.setPosition(750,320);
+            box.setPosition(750,340);
         }
         if (count == 12){
-            box.setPosition(750,470);
+            box.setPosition(750,490);
         }
      //ofxDatGui* loopGui = new ofxDatGui(400,75*count);
         box.add(del.setup("delete"));
@@ -97,11 +97,14 @@ void Loop::setup(const filesystem::path& fileName){
 //        box.add(save.setup("save"));
         box.add(volume.setup("volume ", 0.8, 0, 1));
         box.add(pitch.setup("pitch",1, 0.1, 3));
-        box.add(trim.set("trim", 1,0,1));
+        effects.add(startPoint.set("start point", 0,0,1));
+        effects.add(trim.set("trim", 1,0,1));
         box.add(position.setup("position",0,0,1));
 
         effects.add(numSlices.set("Shuffler", 0, 0, 4));
 
+        effects.add(pitchFx.set("PitchFx", 0, 0, 4.0));
+         // effects.add(delay.set("Delay", 0, 0, 1.0));
 
 
 
